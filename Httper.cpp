@@ -3,13 +3,8 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
-#include <io.h>    
-#include <iostream>
-#include <sstream>
+#include <io>    
 #include <fstream>
-
-#include "FunAssistant.h"
-#include "FileAssistant.h"
 
 
 using namespace std;
