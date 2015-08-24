@@ -9,90 +9,140 @@
 #include <curl/curlbuild.h>
 
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-typedef struct file {
-	const char *filename;
-	std::FILE *stream;
-} download_file;
+namespace curlpp
+{
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	typedef struct file {
+		const char *filename;
+		std::FILE *stream;
+	} download_file;
+
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class net_default_data{
+	public:
+		static int timeout();
+		static void timeout(int val);
+
+		static std::string& download_path();
+		void download_path(std::string val);
+
+	private:
+		static int g_timeout;
+		static std::string m_download_path;
+
+	};
+
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class url_post_params{
+	private:
+		typedef std::pair<std::string, std::string> post_prarm_type;
+		typedef std::vector<post_prarm_type> post_params_type;
+
+	public:
+		void add_params(const std::string& key, const std::string& value);
+		std::string format() const;
+		void clear();
+
+	private:
+		post_params_type m_values;
+	};
+
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class net_data{
+	public:
+		net_data();
+
+	public:
+		int timeout() const;
+		void timeout(int val);
+
+		const std::string& url() const;
+		void url(const std::string& url);
 
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-class xttp_net_data{
-public:
-	int timeout() const;
-	void timeout(int val);
+		const std::string& download_path() const;
+		void download_path(const std::string& val);
 
-	const std::string& url() const;
-	void url(const std::string& url);
+		const std::string& outfile_name() const;
+		void outfile_name(const std::string& outfile_name);
 
-	const std::string& post_fields() const;
-	void post_fields(const std::string& post_fields);
+		const std::vector<std::string>& headers() const;
+		void append_header(const std::string& header) ;
+		void headers(const std::vector<std::string>& headers);
 
-	const std::string& outfile_name() const;
-	void outfile_name(const std::string& outfile_name);
+		curlpp::url_post_params& post_params_write() ;
+		std::string post_params() const;
 
-	const std::vector<std::string>& headers() const;
-	void headers(const std::vector<std::string>& headers);
-
-
-private:
-	int m_timeout;
-	std::string m_url;
-	std::string m_post_fields;
-	std::string m_outfile_name;
-	std::vector<std::string> m_headers;
-};
+	private:
+		int m_timeout;
+		std::string m_url;
+		url_post_params m_post_params;
+		std::string m_download_path;
+		std::string m_outfile_name;
+		std::vector<std::string> m_headers;
+	};
 
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-class xttp_rs{
-public:
-	xttp_rs(bool state, const std::string& result);
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class result{
+	public:
+		result(bool state, const std::string& value);
 
-public:
-	static xttp_rs* fail();
+	public:
+		static result* fail();
 
-public:
-	bool state() const;
-	void state(bool val);
+	public:
+		bool state() const;
+		void state(bool val);
 
-	const std::string& result() const;
-	void result(std::string val);
+		const std::string& value() const;
+		void value(std::string val);
 
-private:
-	bool m_state;
-	std::string m_result;
+	private:
+		bool m_state;
+		std::string m_value;
 
-private:
-	static xttp_rs* g_curlFailed;
-};
+	private:
+		static result* g_curlFailed;
+	};
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-class curl_ex{
-public:
-	curl_ex(CURL *curl, struct curl_slist *chunk) :curl(curl), chunk(chunk){}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class curl_x{
+	public:
+		curl_x(CURL *curl, struct curl_slist *chunk);
 
-public:
-	CURL *curl;
-	struct curl_slist *chunk;
-};
+	public:
+		CURL * curl() const { return m_curl; }
+		struct curl_slist * chunk() const { return m_chunk; }
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-class curl_ex_cleaner{
-public:
-	curl_ex_cleaner(curl_ex *mycurl) :mycurl(mycurl){}
-	virtual ~curl_ex_cleaner();
-private:
-	curl_ex *mycurl;
-};
+	private:
+		CURL *m_curl;
+		struct curl_slist *m_chunk;
+		
+	};
 
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	class curl_cleaner{
+	public:
+		curl_cleaner(curl_x *mycurl) :mycurl(mycurl){}
+		virtual ~curl_cleaner();
+	private:
+		curl_x *mycurl;
+	};
+
+
+}

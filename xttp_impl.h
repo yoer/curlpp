@@ -4,20 +4,23 @@
 
 #include "xttp_struct.h"
 
-class xttp_impl
+namespace curlpp
 {
-public:
-	xttp_impl();
-	~xttp_impl();
+	class xttp_impl
+	{
+	public:
+		xttp_impl();
+		~xttp_impl();
 
 
-public:
-	xttp_rs get(const xttp_net_data& data) const;
-	xttp_rs post(const xttp_net_data& data) const;
-	xttp_rs download(const xttp_net_data& data) const;
+	public:
+		result get(const net_data& data) const;
+		result post(const net_data& data) const;
+		result download(const net_data& data) const;
 
-private:
-	curl_ex normalCurl(const xttp_net_data& data, std::stringstream* out) const;
-	xttp_rs request(curl_ex *mycurl, std::stringstream* rs) const;
-};
-
+	private:
+		curl_x normalCurl(const net_data& data, std::stringstream* out) const;
+		result request(curl_x *mycurl, std::stringstream* rs) const;
+		std::string parse_download_file_name(const std::string& url) const;
+	};
+}
