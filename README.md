@@ -32,7 +32,12 @@ implement some normal http methods by curl library, like get/post/download
       std::cout << "post fail," << get_rs.value() << std::endl;
     }
     
-    curlpp::result download_rs = curlpp::hxxp().url("http://www.sample.com/img/sample.png").download_path(".").outfile_name("").download();
+    curlpp::result download_rs =
+        curlpp::hxxp()
+        .url("http://www.sample.com/img/sample.png")
+        .download_path(".")
+        .outfile_name("save.png")
+        .download();
     if (download_rs.state()){
       std::cout << "download success" << std::endl;
     }else{
