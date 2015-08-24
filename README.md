@@ -9,8 +9,7 @@ implement some normal http methods by curl library, like get/post/download
     default_data.download_path(".");
     default_data.timeout(10);
     
-    curlpp::result get_rs = 
-        curlpp::hxxp()
+    curlpp::result get_rs = curlpp::hxxp()
         .url("http://www.sample.com")
         .get();
     if (get_rs.state()){
@@ -19,8 +18,7 @@ implement some normal http methods by curl library, like get/post/download
       std::cout << "get fail," << get_rs.value() << std::endl;
     }
     
-    curlpp::result post_rs = 
-        curlpp::hxxp()
+    curlpp::result post_rs = curlpp::hxxp()
         .url("http://www.sample.com")
         .add_header("")
         .add_header("")
@@ -32,8 +30,7 @@ implement some normal http methods by curl library, like get/post/download
       std::cout << "post fail," << get_rs.value() << std::endl;
     }
     
-    curlpp::result download_rs =
-        curlpp::hxxp()
+    curlpp::result download_rs = curlpp::hxxp()
         .url("http://www.sample.com/img/sample.png")
         .download_path(".")
         .outfile_name("save.png")
