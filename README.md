@@ -1,9 +1,19 @@
+
 # curlimpp
-simple curl encapsulation by cplusplus
+* simple curl encapsulation by c++
 
-implement some normal http methods by curl library, like get/post/download
+* implement some normal http methods by [curl](http://curl.haxx.se/) library, like get/post/download
 
-###Sample
+---
+
+
+##Pre-requisites:
+* you should download [libcurl](http://curl.haxx.se/download.html) and build it
+* you need `libcurl.lib`, and need directory in your lib path
+* you need header files in `include/curl` folder from libcurl, and need directory in your include path
+
+##Sample
+```cpp
     curlpp::hxxp().globalInit();
     curlpp::net_default_data default_data;
     default_data.download_path(".");
@@ -42,3 +52,4 @@ implement some normal http methods by curl library, like get/post/download
     }
     
     curlpp::hxxp().globalClean();
+```
