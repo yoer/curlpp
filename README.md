@@ -9,8 +9,8 @@
 
 ##Pre-requisites:
 * you should download [libcurl](http://curl.haxx.se/download.html) and build it
-* you need `libcurl.lib`, and need directory in your lib path
-* you need header files in `include/curl` folder from libcurl, and need directory in your include path
+* you need `libcurl.lib`, and need directory in your lib path of IDE or makefile
+* you need header files in `include/curl` folder from libcurl, and need directory in your include path of IDE or makefile
 
 ##Sample
 ```cpp
