@@ -1,5 +1,6 @@
 #pragma once
 
+#include "md5.h"
 
 #include <string>
 #include <vector>
@@ -14,9 +15,31 @@ namespace curlpp
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	typedef struct file {
+    
+    typedef struct file {
+        file()
+        : filename(nullptr)
+        , stream(nullptr)
+        , need_degist(false)
+        , pMd5(nullptr)
+        {
+            
+        }
+        
+        ~file() {
+            if(nullptr != stream) {
+                fclose(stream);
+            }
+            
+            if(nullptr != pMd5) {
+                delete pMd5;
+            }
+        }
 		const char *filename;
 		std::FILE *stream;
+        bool need_degist;
+        MD5*    pMd5;
+        std::string md5;
 	} download_file;
 
 	/************************************************************************/
@@ -70,7 +93,11 @@ namespace curlpp
 
 		const std::string& download_path() const;
 		void download_path(const std::string& val);
-
+        
+        const std::string& md5() const;
+        void md5(const std::string& val);
+        bool need_degist() const;
+        
 		const std::string& outfile_name() const;
 		void outfile_name(const std::string& outfile_name);
 
@@ -84,6 +111,8 @@ namespace curlpp
 	private:
 		int m_timeout;
 		std::string m_url;
+        std::string m_md5;
+        bool        m_needdegist;
 		url_post_params m_post_params;
 		std::string m_download_path;
 		std::string m_outfile_name;
@@ -122,7 +151,7 @@ namespace curlpp
 	class curl_x{
 	public:
 		curl_x(CURL *curl, struct curl_slist *chunk);
-
+        ~curl_x();
 	public:
 		CURL * curl() const { return m_curl; }
 		struct curl_slist * chunk() const { return m_chunk; }
@@ -138,7 +167,7 @@ namespace curlpp
 	/************************************************************************/
 	class curl_cleaner{
 	public:
-		curl_cleaner(curl_x *mycurl) :mycurl(mycurl){}
+		curl_cleaner(curl_x *curl) :mycurl(curl){}
 		virtual ~curl_cleaner();
 	private:
 		curl_x *mycurl;

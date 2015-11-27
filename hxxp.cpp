@@ -12,12 +12,12 @@ void curlpp::hxxp::globalClean()
 	curl_global_cleanup();
 }
 
-curlpp::result curlpp::hxxp::get() const
+curlpp::result curlpp::hxxp::get()
 {
 	return m_impl.get(m_net_data);
 }
 
-curlpp::result curlpp::hxxp::post() const
+curlpp::result curlpp::hxxp::post()
 {
 	return m_impl.post(m_net_data);
 }
@@ -67,4 +67,9 @@ curlpp::hxxp& curlpp::hxxp::download_path(const std::string& val)
 {
 	m_net_data.download_path(val);
 	return *this;
+}
+
+curlpp::hxxp& curlpp::hxxp::md5(const std::string &val) {
+    m_net_data.md5(val);
+    return *this;
 }

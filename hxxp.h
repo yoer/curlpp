@@ -14,11 +14,10 @@ namespace curlpp
 	public:
 		static void globalInit();
 		static void globalClean();
-
-
+        
 	public:
-		result get() const;
-		result post() const;
+		result get();
+		result post();
 		result download() const;
 
 	public:
@@ -31,7 +30,7 @@ namespace curlpp
 
 		hxxp& outfile_name(const std::string& val);
 		hxxp& download_path(const std::string& val);
-
+        hxxp& md5(const std::string& val);
 	private:
 		xttp_impl m_impl;
 		net_data m_net_data;

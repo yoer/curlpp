@@ -8,7 +8,7 @@ curlpp::result* curlpp::result::g_curlFailed = nullptr;
 
 curlpp::result::result(bool state, const std::string& value) :m_state(state), m_value(value)
 {
-
+    
 }
 
 curlpp::result* curlpp::result::fail()
@@ -44,19 +44,18 @@ bool curlpp::result::state() const
 
 curlpp::curl_cleaner::~curl_cleaner()
 {
-	if (nullptr != mycurl->curl()) {
-		curl_easy_cleanup(mycurl->curl());
-	}
-	if (nullptr != mycurl->chunk()) {
-		curl_slist_free_all(mycurl->chunk());
-	}
+    if (nullptr != mycurl) {
+        delete mycurl;
+        mycurl = nullptr;
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////////
 curlpp::net_data::net_data()
-: m_timeout(curlpp::net_default_data::timeout()),
-m_download_path(curlpp::net_default_data::download_path())
+: m_timeout(curlpp::net_default_data::timeout())
+, m_download_path(curlpp::net_default_data::download_path())
+, m_needdegist(false)
 {
 }
 
@@ -110,6 +109,19 @@ const std::string& curlpp::net_data::download_path() const
 	return m_download_path;
 }
 
+void curlpp::net_data::md5(const std::string& val) {
+    m_needdegist = true;
+    m_md5 = val;
+}
+
+const std::string& curlpp::net_data::md5() const {
+    return m_md5;
+}
+
+bool curlpp::net_data::need_degist() const {
+    return m_needdegist;
+}
+
 void curlpp::net_data::append_header(const std::string& header) 
 {
 	m_headers.push_back(header);
@@ -156,11 +168,20 @@ curlpp::curl_x::curl_x(CURL *curl, struct curl_slist *chunk) :m_curl(curl), m_ch
 
 }
 
+curlpp::curl_x::~curl_x()
+{
+    if (nullptr != m_curl) {
+        curl_easy_cleanup(m_curl);
+    }
+    if (nullptr != m_chunk) {
+        curl_slist_free_all(m_chunk);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////
 void curlpp::url_post_params::clear()
 {
 	m_values.clear();
-	m_values.swap(post_params_type());
 }
 
 std::string curlpp::url_post_params::format() const
